@@ -1,0 +1,9 @@
+.todos-list{
+    background-color: aliceblue;
+}
+.custom-red {
+    color: #fff;
+    background-color: #b94550;
+    border-color: #dc3545;
+    margin-top: 5px;
+}

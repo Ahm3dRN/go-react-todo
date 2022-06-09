@@ -15,7 +15,7 @@ type TaskList struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Count       int    `json:"count"`
-	// UserID      uint
+	UserID      uint   `json:"-"`
 	// User        User
 	Tasks     []Task
 	CreatedAt datatypes.Date `json:"created_at" gorm:"autoCreateTime:true"`
@@ -48,12 +48,12 @@ type User struct {
 	Role         uint8  `json:"role"`
 }
 
-type Session struct {
-	SessionHash string
-	age         int
-	ExpiryDate  string
-	CreatedAt   string
-	// UserID      uint
+type Token struct {
+	ID         uint `gorm:"primarykey"`
+	TokenHash  string
+	ExpiryDate string
+	CreatedAt  string
+	UserID     uint
 	// User        User
 }
 
@@ -69,5 +69,5 @@ func init() {
 	DB.AutoMigrate(&TaskList{})
 	DB.AutoMigrate(&Task{})
 	DB.AutoMigrate(&User{})
-	DB.AutoMigrate(&Session{})
+	DB.AutoMigrate(&Token{})
 }

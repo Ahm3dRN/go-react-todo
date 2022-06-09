@@ -1,8 +1,12 @@
 package utils
 
 import (
+	"crypto/rand"
+	"encoding/base64"
+	"errors"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/Ahm3dRN/go-react-todo/models"
 	"golang.org/x/crypto/bcrypt"
@@ -36,10 +40,6 @@ func CheckPassHash(hash, password string) bool {
 func CheckIfTaskExists(taskId string) bool {
 	var task models.Task
 	models.DB.First(&task, taskId)
-	// if task.ID == 0 {
-	// 	return false
-	// }
-	// return true
 	return task.ID != 0
 }
 
@@ -47,4 +47,21 @@ func CheckIfTaskListExists(taskListID string) bool {
 	var tasklist models.TaskList
 	models.DB.First(&tasklist, taskListID)
 	return tasklist.ID != 0
+}
+func GenerateToken() string {
+	b := make([]byte, 32)
+	rand.Read(b)
+	return base64.StdEncoding.EncodeToString(b)
+}
+func IsValidToken(token string) (models.Token, error) {
+	token = strings.TrimPrefix(token, "\"")
+	token = strings.TrimSuffix(token, "\"")
+	tokenObj := models.Token{}
+	models.DB.Debug().Where("token_hash = ?", token).Find(&tokenObj)
+	fmt.Println(tokenObj)
+	if tokenObj.ID == 0 {
+		return tokenObj, errors.New("token not found")
+
+	}
+	return tokenObj, nil
 }
